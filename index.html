@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waviq — WhatsApp Automation for Business</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue-900: #042C53;
+    --blue-800: #0C447C;
+    --blue-600: #185FA5;
+    --blue-400: #378ADD;
+    --blue-200: #85B7EB;
+    --blue-100: #B5D4F4;
+    --blue-50:  #E6F1FB;
+    --teal-600: #0F6E56;
+    --teal-400: #1D9E75;
+    --teal-50:  #E1F5EE;
+    --white: #ffffff;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-600: #6c757d;
+    --gray-900: #212529;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--gray-900);
+    background: var(--white);
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: rgba(4, 44, 83, 0.97);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .nav-logo {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+
+  .nav-logo span { color: var(--blue-400); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--blue-100);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--blue-400);
+    color: var(--white);
+    padding: 10px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+
+  .nav-cta:hover { background: var(--blue-200); color: var(--blue-900); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--blue-900) 0%, var(--blue-800) 50%, var(--blue-600) 100%);
+    display: flex;
+    align-items: center;
+    padding: 80px 5% 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: rgba(55, 138, 221, 0.1);
+    border-radius: 50%;
+    top: -200px; right: -200px;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: rgba(29, 158, 117, 0.1);
+    border-radius: 50%;
+    bottom: -100px; left: -100px;
+  }
+
+  .hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(55, 138, 221, 0.2);
+    border: 1px solid rgba(55, 138, 221, 0.4);
+    color: var(--blue-100);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--teal-400);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+  }
+
+  .hero h1 {
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+  }
+
+  .hero h1 span { color: var(--blue-400); }
+
+  .hero p {
+    font-size: 18px;
+    color: var(--blue-100);
+    margin-bottom: 36px;
+    line-height: 1.7;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--teal-400);
+    color: var(--white);
+    padding: 14px 32px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary:hover {
+    background: var(--teal-600);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--white);
+    padding: 14px 32px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid rgba(255,255,255,0.3);
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--white);
+    background: rgba(255,255,255,0.1);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .stat h3 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--white);
+  }
+
+  .stat p {
+    font-size: 13px;
+    color: var(--blue-200);
+    margin: 0;
+  }
+
+  /* PHONE MOCKUP */
+  .hero-phone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .phone-frame {
+    width: 280px;
+    background: #1a1a2e;
+    border-radius: 36px;
+    padding: 16px;
+    border: 8px solid #2d2d4e;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    position: relative;
+  }
+
+  .phone-screen {
+    background: #f0f2f5;
+    border-radius: 24px;
+    overflow: hidden;
+    min-height: 480px;
+  }
+
+  .wa-header {
+    background: #075e54;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .wa-avatar {
+    width: 36px; height: 36px;
+    background: var(--teal-400);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .wa-name {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .wa-status {
+    color: rgba(255,255,255,0.7);
+    font-size: 11px;
+  }
+
+  .wa-messages {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: #e5ddd5;
+    min-height: 420px;
+  }
+
+  .msg {
+    max-width: 85%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .msg-received {
+    background: white;
+    align-self: flex-start;
+    border-radius: 0 8px 8px 8px;
+    color: #333;
+  }
+
+  .msg-sent {
+    background: #dcf8c6;
+    align-self: flex-end;
+    border-radius: 8px 0 8px 8px;
+    color: #333;
+  }
+
+  .msg-time {
+    font-size: 10px;
+    color: #999;
+    text-align: right;
+    margin-top: 2px;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 80px 5%;
+  }
+
+  .section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 60px;
+  }
+
+  .section-badge {
+    display: inline-block;
+    background: var(--blue-50);
+    color: var(--blue-800);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .section-header h2 {
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 800;
+    color: var(--blue-900);
+    line-height: 1.2;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+
+  .section-header p {
+    font-size: 18px;
+    color: var(--gray-600);
+    line-height: 1.7;
+  }
+
+  /* PROBLEM SECTION */
+  .problem {
+    background: var(--gray-100);
+  }
+
+  .problem-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .problem-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid var(--gray-200);
+    border-left: 4px solid #e53e3e;
+  }
+
+  .problem-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+  }
+
+  .problem-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 8px;
+  }
+
+  .problem-card p {
+    font-size: 15px;
+    color: var(--gray-600);
+    line-height: 1.6;
+  }
+
+  /* PRODUCTS */
+  .products-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+  }
+
+  .product-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--gray-200);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--blue-400), var(--teal-400));
+  }
+
+  .product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(12, 68, 124, 0.15);
+    border-color: var(--blue-200);
+  }
+
+  .product-emoji {
+    font-size: 40px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .product-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blue-900);
+    margin-bottom: 8px;
+  }
+
+  .product-card .product-target {
+    font-size: 13px;
+    color: var(--blue-400);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .product-card p {
+    font-size: 15px;
+    color: var(--gray-600);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .feature-list li {
+    font-size: 14px;
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .feature-list li::before {
+    content: '✓';
+    color: var(--teal-400);
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  /* HOW IT WORKS */
+  .how-it-works { background: var(--blue-900); }
+
+  .how-it-works .section-header h2 { color: var(--white); }
+  .how-it-works .section-badge {
+    background: rgba(55, 138, 221, 0.2);
+    color: var(--blue-100);
+  }
+  .how-it-works .section-header p { color: var(--blue-200); }
+
+  .steps-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 32px;
+    position: relative;
+  }
+
+  .step-card {
+    text-align: center;
+    position: relative;
+  }
+
+  .step-number {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, var(--blue-400), var(--teal-400));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--white);
+    margin: 0 auto 20px;
+  }
+
+  .step-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+
+  .step-card p {
+    font-size: 14px;
+    color: var(--blue-200);
+    line-height: 1.6;
+  }
+
+  /* FEATURES */
+  .features-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .feature-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid var(--gray-200);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: all 0.2s;
+  }
+
+  .feature-card:hover {
+    border-color: var(--blue-200);
+    box-shadow: 0 8px 24px rgba(12, 68, 124, 0.08);
+  }
+
+  .feature-icon-box {
+    width: 48px; height: 48px;
+    background: var(--blue-50);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .feature-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--blue-900);
+    margin-bottom: 6px;
+  }
+
+  .feature-card p {
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.6;
+  }
+
+  /* PRICING */
+  .pricing { background: var(--gray-100); }
+
+  .pricing-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+  }
+
+  .pricing-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 36px;
+    border: 2px solid var(--gray-200);
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .pricing-card.featured {
+    border-color: var(--blue-400);
+    position: relative;
+    transform: scale(1.03);
+    box-shadow: 0 20px 40px rgba(12, 68, 124, 0.15);
+  }
+
+  .featured-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--blue-400);
+    color: var(--white);
+    padding: 4px 20px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .pricing-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blue-900);
+    margin-bottom: 8px;
+  }
+
+  .pricing-card .price {
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--blue-800);
+    line-height: 1;
+    margin: 20px 0 4px;
+  }
+
+  .pricing-card .price-note {
+    font-size: 13px;
+    color: var(--gray-600);
+    margin-bottom: 24px;
+  }
+
+  .pricing-features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .pricing-features li {
+    font-size: 14px;
+    color: var(--gray-600);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .pricing-features li::before {
+    content: '✓';
+    color: var(--teal-400);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .pricing-btn {
+    display: block;
+    background: var(--blue-800);
+    color: var(--white);
+    padding: 14px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .pricing-btn:hover {
+    background: var(--blue-900);
+    transform: translateY(-2px);
+  }
+
+  .pricing-card.featured .pricing-btn {
+    background: var(--blue-400);
+  }
+
+  .pricing-card.featured .pricing-btn:hover {
+    background: var(--blue-600);
+  }
+
+  /* ANY BUSINESS */
+  .any-business {
+    background: linear-gradient(135deg, var(--blue-50) 0%, var(--teal-50) 100%);
+  }
+
+  .business-grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .business-item {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid var(--gray-200);
+    transition: all 0.2s;
+  }
+
+  .business-item:hover {
+    border-color: var(--blue-400);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(12, 68, 124, 0.1);
+  }
+
+  .business-item .biz-emoji { font-size: 28px; display: block; margin-bottom: 8px; }
+
+  .business-item p {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--blue-900);
+  }
+
+  /* CONTACT */
+  .contact { background: var(--blue-900); }
+
+  .contact-grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .contact-info h2 {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+
+  .contact-info p {
+    font-size: 16px;
+    color: var(--blue-200);
+    margin-bottom: 32px;
+    line-height: 1.7;
+  }
+
+  .contact-items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--blue-100);
+    font-size: 15px;
+    text-decoration: none;
+  }
+
+  .contact-item-icon {
+    width: 40px; height: 40px;
+    background: rgba(55, 138, 221, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .contact-cta {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 36px;
+    text-align: center;
+  }
+
+  .contact-cta h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .contact-cta p {
+    font-size: 15px;
+    color: var(--blue-200);
+    margin-bottom: 24px;
+  }
+
+  .whatsapp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #25d366;
+    color: var(--white);
+    padding: 14px 32px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .whatsapp-btn:hover {
+    background: #1da851;
+    transform: translateY(-2px);
+  }
+
+  /* FOOTER */
+  footer {
+    background: #021a33;
+    padding: 40px 5%;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .footer-logo span { color: var(--blue-400); }
+
+  footer p {
+    font-size: 14px;
+    color: var(--blue-200);
+    margin-bottom: 8px;
+  }
+
+  footer .footer-links {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+
+  footer .footer-links a {
+    color: var(--blue-200);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+
+  footer .footer-links a:hover { color: var(--white); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero-content { grid-template-columns: 1fr; }
+    .hero-phone { display: none; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero-stats { flex-wrap: wrap; gap: 20px; }
+    .pricing-card.featured { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Wav<span>iq</span></a>
+  <ul class="nav-links">
+    <li><a href="#products">Products</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how-it-works">How it works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://wa.me/916364778044?text=Hi!%20I%20want%20a%20free%20demo%20of%20Waviq" class="nav-cta">Get Free Demo</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div>
+      <div class="hero-badge">WhatsApp AI Automation — Pan India</div>
+      <h1>Automate Your Business on <span>WhatsApp</span> 24/7</h1>
+      <p>Waviq builds intelligent WhatsApp bots that handle bookings, appointments, and lead collection automatically — so you never miss a customer again.</p>
+      <div class="hero-buttons">
+        <a href="https://wa.me/916364778044?text=Hi!%20I%20want%20a%20free%20demo%20of%20Waviq" class="btn-primary">
+          📱 Get Free Demo
+        </a>
+        <a href="#products" class="btn-secondary">See Products</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><h3>24/7</h3><p>Always available</p></div>
+        <div class="stat"><h3>60s</h3><p>Booking time</p></div>
+        <div class="stat"><h3>₹0</h3><p>Setup risk</p></div>
+        <div class="stat"><h3>Pan India</h3><p>Coverage</p></div>
+      </div>
+    </div>
+    <div class="hero-phone">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="wa-header">
+            <div class="wa-avatar">W</div>
+            <div>
+              <div class="wa-name">Sasikala Hospital</div>
+              <div class="wa-status">Online</div>
+            </div>
+          </div>
+          <div class="wa-messages">
+            <div class="msg msg-sent">Hi 👋<div class="msg-time">9:00 PM</div></div>
+            <div class="msg msg-received">Welcome to Sasikala Hospital! 🏥<br>Type BOOK to book appointment.<div class="msg-time">9:00 PM</div></div>
+            <div class="msg msg-sent">BOOK<div class="msg-time">9:01 PM</div></div>
+            <div class="msg msg-received">Select doctor:<br>1. Dr. Nandhini - General<br>2. Dr. Divya - Cardiology<br>3. Dr. Priya - Pediatrics<div class="msg-time">9:01 PM</div></div>
+            <div class="msg msg-sent">1<div class="msg-time">9:01 PM</div></div>
+            <div class="msg msg-received">Available slots:<br>1. Thu 28 May at 9:00<br>2. Thu 28 May at 9:20<br>3. Fri 29 May at 9:00<div class="msg-time">9:01 PM</div></div>
+            <div class="msg msg-sent">2<div class="msg-time">9:02 PM</div></div>
+            <div class="msg msg-received">✅ Appointment Confirmed!<br>Dr. Nandhini<br>Thu 28 May at 9:20 AM<div class="msg-time">9:02 PM</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="section-header">
+    <span class="section-badge">The Problem</span>
+    <h2>Are You Losing Customers After Hours?</h2>
+    <p>Every missed call is a missed opportunity. Businesses lose thousands of rupees daily from after-hours enquiries going unanswered.</p>
+  </div>
+  <div class="problem-grid">
+    <div class="problem-card">
+      <div class="problem-icon">📞</div>
+      <h3>Missed Calls at Night</h3>
+      <p>Patients call at 9 PM for appointments. Receptionist is off. Patient calls your competitor instead.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">⏰</div>
+      <h3>Manual Booking Wastes Time</h3>
+      <p>Your staff spends hours on the phone booking appointments instead of focusing on core work.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">📋</div>
+      <h3>No Automated Reminders</h3>
+      <p>Customers forget their appointments. No-shows cost your business money and wasted time slots.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">💸</div>
+      <h3>Lost Revenue Every Day</h3>
+      <p>Every unanswered enquiry after business hours is direct revenue lost to competitors.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="section-header">
+    <span class="section-badge">Our Products</span>
+    <h2>WhatsApp Automation for Every Business</h2>
+    <p>Purpose-built bots for different industries, each designed to handle the unique needs of your business.</p>
+  </div>
+  <div class="products-grid">
+    <div class="product-card">
+      <span class="product-emoji">🏥</span>
+      <h3>CliniQ</h3>
+      <div class="product-target">For Clinics & Hospitals</div>
+      <p>Complete appointment booking system on WhatsApp. Patients book 24/7, doctors get instant notifications.</p>
+      <ul class="feature-list">
+        <li>Doctor selection by number</li>
+        <li>Automatic slot management</li>
+        <li>Patient detail collection</li>
+        <li>Instant doctor notification</li>
+        <li>Daily schedule reports</li>
+        <li>Cancel/reschedule automation</li>
+      </ul>
+    </div>
+    <div class="product-card">
+      <span class="product-emoji">🍽️</span>
+      <h3>TableQ</h3>
+      <div class="product-target">For Restaurants & Cafes</div>
+      <p>Table reservation system on WhatsApp. Customers book tables, pre-order food, and get confirmations automatically.</p>
+      <ul class="feature-list">
+        <li>Table booking automation</li>
+        <li>Indoor/outdoor/rooftop areas</li>
+        <li>Guest count management</li>
+        <li>Special occasion handling</li>
+        <li>Reminder before reservation</li>
+        <li>Manager instant notification</li>
+      </ul>
+    </div>
+    <div class="product-card">
+      <span class="product-emoji">💪</span>
+      <h3>GymQ</h3>
+      <div class="product-target">For Gyms & Fitness Centers</div>
+      <p>Session booking and membership management on WhatsApp. Members book trainers, classes and get reminders.</p>
+      <ul class="feature-list">
+        <li>Trainer session booking</li>
+        <li>Class schedule automation</li>
+        <li>Membership management</li>
+        <li>Renewal reminders</li>
+        <li>Diet and workout tips</li>
+        <li>Trainer notifications</li>
+      </ul>
+    </div>
+    <div class="product-card">
+      <span class="product-emoji">🤖</span>
+      <h3>CustomQ</h3>
+      <div class="product-target">For Any Business</div>
+      <p>Custom WhatsApp automation built specifically for your business needs. Any industry, any workflow.</p>
+      <ul class="feature-list">
+        <li>Custom conversation flow</li>
+        <li>Lead collection automation</li>
+        <li>Product catalogue sharing</li>
+        <li>Quote and enquiry handling</li>
+        <li>Follow-up automation</li>
+        <li>Payment reminders</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works" class="how-it-works">
+  <div class="section-header">
+    <span class="section-badge">How It Works</span>
+    <h2>Up and Running in 48 Hours</h2>
+    <p>Simple setup, zero technical knowledge required from your side. We handle everything.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-number">1</div>
+      <h3>We Setup Your Bot</h3>
+      <p>We configure your WhatsApp bot with your clinic/business details, doctors, timings, and preferences.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">2</div>
+      <h3>Customers Message You</h3>
+      <p>Customers send "Hi" to your WhatsApp number and the bot handles everything automatically.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">3</div>
+      <h3>Bot Books Automatically</h3>
+      <p>Bot collects details, shows available slots, books appointment and confirms — all in under 2 minutes.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">4</div>
+      <h3>You Get Notified</h3>
+      <p>You receive instant WhatsApp notification for every booking, cancellation, and enquiry.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">5</div>
+      <h3>Data in Your Sheet</h3>
+      <p>All bookings saved automatically to your Google Sheet. Access your data anytime, anywhere.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-header">
+    <span class="section-badge">Features</span>
+    <h2>Everything Your Business Needs</h2>
+    <p>Powerful features built specifically for Indian businesses running on WhatsApp.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon-box">📱</div>
+      <div>
+        <h3>WhatsApp Native</h3>
+        <p>Works on the app your customers already use daily. No new app download needed.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon-box">🕐</div>
+      <div>
+        <h3>24/7 Availability</h3>
+        <p>Bot works round the clock — midnight, weekends, holidays. Never miss a booking.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon-box">📊</div>
+      <div>
+        <h3>Google Sheets Database</h3>
+        <p>All data saved to your Google Sheet. You own your data, always accessible.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon-box">🔔</div>
+      <div>
+        <h3>Instant Notifications</h3>
+        <p>Get WhatsApp alert the moment a booking is made, cancelled, or rescheduled.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon-box">🌏</div>
+      <div>
+        <h3>Tamil & English Support</h3>
+        <p>Bot responds in Tamil or English based on how your customer messages. Truly local.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon-box">📅</div>
+      <div>
+        <h3>Smart Scheduling</h3>
+        <p>Shows only available slots, blocks booked times, handles cancellations automatically.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon-box">💰</div>
+      <div>
+        <h3>Payment Follow-up</h3>
+        <p>Automated payment reminders sent to customers on Day 1, 3, 7 via WhatsApp. Track pending payments and mark received.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon-box">🤖</div>
+      <div>
+        <h3>AI Powered</h3>
+        <p>Understands natural language. Doctor can type "cancel all Friday appointments" and bot handles it.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon-box">📈</div>
+      <div>
+        <h3>Daily Reports</h3>
+        <p>Owner/doctor gets daily schedule on WhatsApp every morning. Always prepared.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon-box">🔄</div>
+      <div>
+        <h3>Follow-up Automation</h3>
+        <p>Automatic follow-up messages on Day 1, 3, 7, and 14 to convert leads to clients.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="pricing">
+  <div class="section-header">
+    <span class="section-badge">Pricing</span>
+    <h2>Simple, Transparent Pricing</h2>
+    <p>No hidden charges. No contracts. Start with a free 2-week trial — no credit card required.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <h3>Starter</h3>
+      <p style="color:var(--gray-600); font-size:14px;">Perfect for small clinics</p>
+      <div class="price">₹3,000</div>
+      <div class="price-note">per month + ₹5,000 one-time setup</div>
+      <ul class="pricing-features">
+        <li>WhatsApp booking bot</li>
+        <li>Up to 3 doctors/staff</li>
+        <li>Google Sheets database</li>
+        <li>Instant notifications</li>
+        <li>Cancel/reschedule</li>
+        <li>Daily schedule reports</li>
+        <li>Email support</li>
+      </ul>
+      <a href="https://wa.me/916364778044?text=Hi!%20I%20want%20Starter%20plan%20for%20Waviq" class="pricing-btn">Start Free Trial</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="featured-badge">Most Popular</div>
+      <h3>Professional</h3>
+      <p style="color:var(--gray-600); font-size:14px;">For growing businesses</p>
+      <div class="price">₹5,000</div>
+      <div class="price-note">per month + ₹8,000 one-time setup</div>
+      <ul class="pricing-features">
+        <li>Everything in Starter</li>
+        <li>Unlimited doctors/staff</li>
+        <li>Morning summary to doctors</li>
+        <li>Patient appointment reminders</li>
+        <li>Follow-up automation</li>
+        <li>Invoice generation</li>
+        <li>Priority WhatsApp support</li>
+      </ul>
+      <a href="https://wa.me/916364778044?text=Hi!%20I%20want%20Professional%20plan%20for%20Waviq" class="pricing-btn">Start Free Trial</a>
+    </div>
+    <div class="pricing-card">
+      <h3>Enterprise</h3>
+      <p style="color:var(--gray-600); font-size:14px;">For hospitals & chains</p>
+      <div class="price">Custom</div>
+      <div class="price-note">based on requirements</div>
+      <ul class="pricing-features">
+        <li>Everything in Professional</li>
+        <li>Multiple branches</li>
+        <li>Custom conversation flow</li>
+        <li>Advanced analytics</li>
+        <li>API integrations</li>
+        <li>Dedicated account manager</li>
+        <li>24/7 phone support</li>
+      </ul>
+      <a href="https://wa.me/916364778044?text=Hi!%20I%20want%20Enterprise%20plan%20for%20Waviq" class="pricing-btn">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- ANY BUSINESS -->
+<section class="any-business">
+  <div class="section-header">
+    <span class="section-badge">Any Business</span>
+    <h2>We Automate Any Business on WhatsApp</h2>
+    <p>From clinics to restaurants to retail shops — if your business takes bookings or enquiries, we can automate it.</p>
+  </div>
+  <div class="business-grid">
+    <div class="business-item"><span class="biz-emoji">🏥</span><p>Clinics</p></div>
+    <div class="business-item"><span class="biz-emoji">🦷</span><p>Dental Clinics</p></div>
+    <div class="business-item"><span class="biz-emoji">🍽️</span><p>Restaurants</p></div>
+    <div class="business-item"><span class="biz-emoji">💪</span><p>Gyms</p></div>
+    <div class="business-item"><span class="biz-emoji">💇</span><p>Salons & Spas</p></div>
+    <div class="business-item"><span class="biz-emoji">🏫</span><p>Tuition Centers</p></div>
+    <div class="business-item"><span class="biz-emoji">🏠</span><p>Real Estate</p></div>
+    <div class="business-item"><span class="biz-emoji">🚗</span><p>Car Service</p></div>
+    <div class="business-item"><span class="biz-emoji">⚖️</span><p>Law Firms</p></div>
+    <div class="business-item"><span class="biz-emoji">🏋️</span><p>Yoga Studios</p></div>
+    <div class="business-item"><span class="biz-emoji">🔧</span><p>Home Services</p></div>
+    <div class="business-item"><span class="biz-emoji">📚</span><p>Coaching Centers</p></div>
+  </div>
+  <div style="text-align:center;">
+    <a href="https://wa.me/916364778044?text=Hi!%20I%20want%20WhatsApp%20automation%20for%20my%20business" class="btn-primary">Get Free Consultation</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact">
+  <div class="contact-grid">
+    <div class="contact-info">
+      <h2>Let's Automate Your Business</h2>
+      <p>Ready to never miss a customer again? Get your free 2-week trial today. No credit card, no contracts, no risk.</p>
+      <div class="contact-items">
+        <a href="mailto:service@waviq.in" class="contact-item">
+          <div class="contact-item-icon">📧</div>
+          service@waviq.in
+        </a>
+        <a href="tel:+916364778044" class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          +91 63647 78044
+        </a>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          Vellore, Tamil Nadu, India
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🌐</div>
+          waviq.in
+        </div>
+      </div>
+    </div>
+    <div class="contact-cta">
+      <h3>Start Your Free Trial Today</h3>
+      <p>Message us on WhatsApp for an instant demo. See your bot live in under 48 hours.</p>
+      <a href="https://wa.me/916364778044?text=Hi!%20I%20want%20a%20free%20demo%20of%20Waviq%20WhatsApp%20automation" class="whatsapp-btn">
+        💬 WhatsApp Us Now
+      </a>
+      <p style="margin-top:16px; font-size:13px; color:rgba(255,255,255,0.4);">Free 2-week trial • No credit card • Cancel anytime</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Wav<span>iq</span></div>
+  <p>WhatsApp Automation for Indian Businesses</p>
+  <div class="footer-links">
+    <a href="#products">Products</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact">Contact</a>
+    <a href="mailto:service@waviq.in">service@waviq.in</a>
+  </div>
+  <p style="font-size:13px; margin-top:8px;">© 2026 Waviq. All rights reserved. | Vellore, Tamil Nadu, India</p>
+</footer>
+
+</body>
+</html>
