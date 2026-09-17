@@ -284,6 +284,33 @@
       object-fit: contain;
     }
 
+    .nav-brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+
+    .nav-brand-tagline {
+      padding-left: 14px;
+      border-left: 1px solid rgba(255,255,255,0.28);
+      line-height: 1.25;
+      white-space: nowrap;
+    }
+
+    .nav-brand-tagline strong {
+      display: block;
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .nav-brand-tagline span {
+      display: block;
+      color: var(--blue-200);
+      font-size: 12px;
+    }
+
     /* Nav links */
     .nav-links {
       display: flex;
@@ -1589,6 +1616,7 @@
       .contact-grid { grid-template-columns: 1fr; }
       .footer-top { grid-template-columns: 1fr 1fr; }
       nav .nav-links { display: none; }
+      .nav-brand-tagline { display: none; }
       .pricing-card.featured { transform: none; }
       .hero-stats { gap: 20px; }
       .countries-grid { grid-template-columns: 1fr; }
@@ -1622,8 +1650,12 @@
        ============================================================ -->
   <nav>
     <!-- Logo -->
-    <a href="#" class="nav-logo" aria-label="Waviq home">
-      <img src="waviq-logo.png" alt="Waviq" class="nav-logo-img">
+    <a href="#" class="nav-logo nav-brand-wrap" aria-label="Waviq home">
+      <img src="waviq-logo.png" alt="Waviq — Connect · Automate · Grow" class="nav-logo-img">
+      <div class="nav-brand-tagline">
+        <strong>Innovative Technology</strong>
+        <span>for a Smarter Tomorrow</span>
+      </div>
     </a>
 
     <!-- Navigation links -->
