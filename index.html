@@ -276,6 +276,14 @@
     }
     .nav-logo span { color: var(--teal-400); }
 
+    /* Waviq logo image — upload waviq-logo.png in the same folder as index.html */
+    .nav-logo-img {
+      height: 42px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+
     /* Nav links */
     .nav-links {
       display: flex;
@@ -1614,7 +1622,9 @@
        ============================================================ -->
   <nav>
     <!-- Logo -->
-    <a href="#" class="nav-logo">Wav<span>iq</span></a>
+    <a href="#" class="nav-logo" aria-label="Waviq home">
+      <img src="waviq-logo.png" alt="Waviq" class="nav-logo-img">
+    </a>
 
     <!-- Navigation links -->
     <ul class="nav-links">
@@ -1651,7 +1661,7 @@
           <!-- Live badge -->
           <div class="hero-eyebrow">
             <div class="hero-eyebrow-dot"></div>
-            <span class="hero-eyebrow-text">AI-Powered WhatsApp Automation — Worldwide</span>
+            <span class="hero-eyebrow-text">WhatsApp Automation — Worldwide</span>
           </div>
 
           <!-- Main headline -->
@@ -1835,6 +1845,27 @@
         </div>
 
       </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       WAVIQ WHATSAPP AUTOMATION INFOGRAPHIC
+       ============================================================ -->
+  <section style="padding:80px 5%; background:#ffffff;">
+    <div class="container" style="text-align:center;">
+      <div class="section-header">
+        <span class="badge badge-teal">How Waviq Works</span>
+        <h2>Never Miss a Customer on WhatsApp</h2>
+        <p>Automate your business communication and turn enquiries into opportunities.</p>
+      </div>
+
+      <img
+        src="waviq-whatsapp-automation.png"
+        alt="Waviq WhatsApp business automation workflow"
+        loading="lazy"
+        style="width:100%; max-width:1200px; height:auto; display:block; margin:0 auto; border-radius:20px; box-shadow:var(--shadow-md);"
+      >
     </div>
   </section>
 
@@ -2353,8 +2384,7 @@
           <p class="price-period">per month + ₹8,000 one-time setup</p>
           <ul class="pricing-features">
             <li>Everything in Starter</li>
-            <li>Unlimited staff/doctors</li>
-            <li>Website development</li>
+            <li>Up to 50 staff/doctors</li>
             <li>Payment reminders</li>
             <li>Follow-up automation</li>
             <li>QR code generation</li>
